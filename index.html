@@ -465,12 +465,12 @@
     <div class="container">
         <header>
             <h1>СИСТЕМА УПРАВЛЕНИЯ ЛОЯЛЬНОСТЬЮ</h1>
-            <p>Отслеживание клиентов, посещений и подписок</p>
+            <p>Отслеживание поситителей, посещений и подписок</p>
         </header>
 
         <div class="dashboard">
             <div class="stat-card">
-                <h3>Всего клиентов</h3>
+                <h3>Всего гостей</h3>
                 <div class="number" id="total-clients">0</div>
             </div>
             <div class="stat-card">
@@ -489,8 +489,8 @@
         </div>
 
         <div class="tabs">
-            <div class="tab active" data-tab="clients">Клиенты</div>
-            <div class="tab" data-tab="add-client">Добавить клиента</div>
+            <div class="tab active" data-tab="clients">Гости</div>
+            <div class="tab" data-tab="add-client">Добавить гостя</div>
             <div class="tab" data-tab="visits">Учет посещений</div>
             <div class="tab" data-tab="subscriptions">Подписки</div>
             <div class="tab" data-tab="stats">Статистика</div>
@@ -504,7 +504,7 @@
             </div>
 
             <div class="card">
-                <h2>Список клиентов</h2>
+                <h2>Список гостей</h2>
                 <table id="clients-table">
                     <thead>
                         <tr>
@@ -526,11 +526,11 @@
 
         <div class="tab-content" id="add-client">
             <div class="card">
-                <h2 id="form-title">Добавить нового клиента</h2>
+                <h2 id="form-title">Добавить нового гостя</h2>
                 <form id="client-form">
                     <input type="hidden" id="client-id">
                     <div class="form-group">
-                        <label for="name">ФИО клиента</label>
+                        <label for="name">ФИО гостя</label>
                         <input type="text" id="name" required>
                     </div>
                     <div class="form-group">
@@ -564,7 +564,7 @@
                         <label for="notes">Примечания</label>
                         <input type="text" id="notes">
                     </div>
-                    <button type="submit" id="submit-btn">Сохранить клиента</button>
+                    <button type="submit" id="submit-btn">Сохранить гостя</button>
                     <button type="button" id="cancel-btn" class="secondary" style="display: none;">Отмена</button>
                 </form>
             </div>
@@ -574,7 +574,7 @@
             <div class="card">
                 <h2>Учет посещений</h2>
                 <div class="form-group">
-                    <label for="visit-client">Выберите клиента</label>
+                    <label for="visit-client">Выберите гостя</label>
                     <select id="visit-client">
                         <option value="">Выберите клиента</option>
                         <!-- Клиенты будут добавлены через JavaScript -->
@@ -586,7 +586,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Клиент</th>
+                            <th>Гость</th>
                             <th>Дата посещения</th>
                             <th>Тип карты</th>
                             <th>Всего посещений (мес.)</th>
@@ -611,7 +611,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Клиент</th>
+                            <th>Гость</th>
                             <th>Телефон</th>
                             <th>Тип карты</th>
                             <th>Начало подписки</th>
@@ -634,11 +634,11 @@
                     <!-- График будет построен через JavaScript -->
                 </div>
                 
-                <h3>Топ клиентов по посещениям</h3>
+                <h3>Топ гостей по посещениям</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Клиент</th>
+                            <th>Гость</th>
                             <th>Телефон</th>
                             <th>Тип карты</th>
                             <th>Посещений (мес.)</th>
