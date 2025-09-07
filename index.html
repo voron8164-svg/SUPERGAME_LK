@@ -59,6 +59,12 @@
             font-size: 1.6rem;
         }
 
+        h3 {
+            color: #d9a1ff;
+            margin: 15px 0 10px;
+            font-size: 1.3rem;
+        }
+
         .dashboard {
             display: grid;
             grid-template-columns: 1fr;
@@ -97,6 +103,12 @@
             font-size: 2.5rem;
             font-weight: bold;
             color: var(--light-accent);
+        }
+
+        .stat-card .subtext {
+            font-size: 0.9rem;
+            color: #c273ff;
+            margin-top: 5px;
         }
 
         .card {
@@ -152,6 +164,12 @@
             border: 1px solid var(--accent-color);
         }
 
+        button.small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -200,6 +218,17 @@
             color: #330000;
         }
 
+        .visit-count {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
         .actions {
             display: flex;
             gap: 10px;
@@ -218,6 +247,10 @@
 
         .btn-delete {
             color: var(--danger);
+        }
+
+        .btn-visit {
+            color: var(--success);
         }
 
         .search-box {
@@ -241,6 +274,7 @@
             display: flex;
             margin-bottom: 20px;
             border-bottom: 1px solid var(--accent-color);
+            flex-wrap: wrap;
         }
 
         .tab {
@@ -354,6 +388,46 @@
             background: #6a1cb0;
         }
 
+        .chart-container {
+            margin-top: 20px;
+            height: 300px;
+            background: rgba(44, 0, 44, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+
+        .chart-bar {
+            background: var(--accent-color);
+            width: 40px;
+            margin: 0 5px;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #d9a1ff;
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
         @media (max-width: 767px) {
             table {
                 display: block;
@@ -376,6 +450,14 @@
             .filter-btn {
                 width: 100%;
             }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -383,7 +465,7 @@
     <div class="container">
         <header>
             <h1>СИСТЕМА УПРАВЛЕНИЯ ЛОЯЛЬНОСТЬЮ</h1>
-            <p>Отслеживание клиентов и их подписок</p>
+            <p>Отслеживание клиентов, посещений и подписок</p>
         </header>
 
         <div class="dashboard">
@@ -396,8 +478,9 @@
                 <div class="number" id="active-subscriptions">0</div>
             </div>
             <div class="stat-card">
-                <h3>Заканчиваются сегодня</h3>
-                <div class="number" id="expiring-today">0</div>
+                <h3>Посещений за месяц</h3>
+                <div class="number" id="month-visits">0</div>
+                <div class="subtext" id="month-name"></div>
             </div>
             <div class="stat-card">
                 <h3>Просроченные</h3>
@@ -408,7 +491,9 @@
         <div class="tabs">
             <div class="tab active" data-tab="clients">Клиенты</div>
             <div class="tab" data-tab="add-client">Добавить клиента</div>
+            <div class="tab" data-tab="visits">Учет посещений</div>
             <div class="tab" data-tab="subscriptions">Подписки</div>
+            <div class="tab" data-tab="stats">Статистика</div>
             <div class="tab" data-tab="data-management">Управление данными</div>
         </div>
 
@@ -426,6 +511,7 @@
                             <th>Имя</th>
                             <th>Телефон</th>
                             <th>Карта</th>
+                            <th>Посещений (мес.)</th>
                             <th>Подписка до</th>
                             <th>Статус</th>
                             <th>Действия</th>
@@ -484,6 +570,35 @@
             </div>
         </div>
 
+        <div class="tab-content" id="visits">
+            <div class="card">
+                <h2>Учет посещений</h2>
+                <div class="form-group">
+                    <label for="visit-client">Выберите клиента</label>
+                    <select id="visit-client">
+                        <option value="">Выберите клиента</option>
+                        <!-- Клиенты будут добавлены через JavaScript -->
+                    </select>
+                </div>
+                <button id="add-visit-btn" class="secondary">Добавить посещение</button>
+                
+                <h3>Посещения за текущий месяц</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Клиент</th>
+                            <th>Дата посещения</th>
+                            <th>Тип карты</th>
+                            <th>Всего посещений (мес.)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visits-list">
+                        <!-- Посещения будут добавлены через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="tab-content" id="subscriptions">
             <div class="card">
                 <h2>Управление подписками</h2>
@@ -507,6 +622,31 @@
                     </thead>
                     <tbody id="subscriptions-list">
                         <!-- Подписки будут добавлены через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-content" id="stats">
+            <div class="card">
+                <h2>Статистика посещений</h2>
+                <div class="chart-container" id="visits-chart">
+                    <!-- График будет построен через JavaScript -->
+                </div>
+                
+                <h3>Топ клиентов по посещениям</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Клиент</th>
+                            <th>Телефон</th>
+                            <th>Тип карты</th>
+                            <th>Посещений (мес.)</th>
+                            <th>Всего посещений</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-clients-list">
+                        <!-- Топ клиентов будет добавлен через JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -549,6 +689,7 @@
     <script>
         // Основные переменные
         let clients = JSON.parse(localStorage.getItem('loyaltyClients')) || [];
+        let visits = JSON.parse(localStorage.getItem('loyaltyVisits')) || [];
         let editingClientId = null;
 
         // Инициализация при загрузке страницы
@@ -569,7 +710,11 @@
             // Загрузка данных
             loadClients();
             loadSubscriptions();
+            loadVisits();
             updateStats();
+            updateVisitSelect();
+            buildVisitsChart();
+            loadTopClients();
 
             // Настройка обработчиков событий
             setupEventListeners();
@@ -589,6 +734,13 @@
                     // При переключении на вкладку подписок обновляем данные
                     if (tab.dataset.tab === 'subscriptions') {
                         loadSubscriptions();
+                    }
+                    if (tab.dataset.tab === 'stats') {
+                        buildVisitsChart();
+                        loadTopClients();
+                    }
+                    if (tab.dataset.tab === 'visits') {
+                        loadVisits();
                     }
                 });
             });
@@ -610,13 +762,18 @@
                 filterClients(searchTerm);
             });
 
-            // Фильтрация подписок - ИСПРАВЛЕНИЕ!
+            // Фильтрация подписок
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     filterSubscriptions(this.dataset.filter);
                 });
+            });
+
+            // Добавление посещения
+            document.getElementById('add-visit-btn').addEventListener('click', function() {
+                addVisit();
             });
 
             // Управление данными
@@ -638,23 +795,26 @@
             clientsList.innerHTML = '';
 
             if (clients.length === 0) {
-                clientsList.innerHTML = '<tr><td colspan="6" style="text-align: center;">Нет данных о клиентах</td></tr>';
+                clientsList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Нет данных о клиентах</td></tr>';
                 return;
             }
 
             clients.forEach(client => {
                 const status = getSubscriptionStatus(client.endDate);
+                const monthlyVisits = getMonthlyVisits(client.id);
                 const row = document.createElement('tr');
                 
                 row.innerHTML = `
                     <td>${client.name}</td>
                     <td>${client.phone}</td>
                     <td>${getCardTypeName(client.cardType)}</td>
+                    <td>${monthlyVisits}</td>
                     <td>${formatDate(client.endDate)}</td>
                     <td><span class="status-badge status-${status}">${getStatusText(status)}</span></td>
                     <td class="actions">
                         <button class="btn-icon btn-edit" data-id="${client.id}"><i class="fas fa-edit"></i></button>
                         <button class="btn-icon btn-delete" data-id="${client.id}"><i class="fas fa-trash"></i></button>
+                        <button class="btn-icon btn-visit" data-id="${client.id}" title="Добавить посещение"><i class="fas fa-calendar-plus"></i></button>
                     </td>
                 `;
                 
@@ -673,6 +833,27 @@
                     deleteClient(this.dataset.id);
                 });
             });
+
+            document.querySelectorAll('.btn-visit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    addQuickVisit(this.dataset.id);
+                });
+            });
+        }
+
+        // Быстрое добавление посещения
+        function addQuickVisit(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+            
+            // Установка выбранного клиента в выпадающем списке
+            document.getElementById('visit-client').value = clientId;
+            
+            // Добавление посещения
+            addVisit();
+            
+            // Показать уведомление
+            showNotification(`Посещение добавлено для ${client.name}`, 'success');
         }
 
         // Загрузка подписок в таблицу
@@ -704,7 +885,210 @@
             });
         }
 
-        // Фильтрация подписок - ИСПРАВЛЕНИЕ!
+        // Загрузка посещений в таблицу
+        function loadVisits() {
+            const visitsList = document.getElementById('visits-list');
+            visitsList.innerHTML = '';
+
+            // Получаем текущий месяц и год
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            // Фильтруем посещения за текущий месяц
+            const monthlyVisits = visits.filter(visit => {
+                const visitDate = new Date(visit.date);
+                return visitDate.getMonth() === currentMonth && 
+                       visitDate.getFullYear() === currentYear;
+            });
+
+            if (monthlyVisits.length === 0) {
+                visitsList.innerHTML = '<tr><td colspan="4" style="text-align: center;">Нет данных о посещениях за текущий месяц</td></tr>';
+                return;
+            }
+
+            // Группируем посещения по клиентам
+            const visitsByClient = {};
+            monthlyVisits.forEach(visit => {
+                if (!visitsByClient[visit.clientId]) {
+                    visitsByClient[visit.clientId] = {
+                        client: clients.find(c => c.id === visit.clientId),
+                        count: 0,
+                        lastDate: ''
+                    };
+                }
+                visitsByClient[visit.clientId].count++;
+                // Сохраняем последнюю дату посещения
+                if (!visitsByClient[visit.clientId].lastDate || 
+                    new Date(visit.date) > new Date(visitsByClient[visit.clientId].lastDate)) {
+                    visitsByClient[visit.clientId].lastDate = visit.date;
+                }
+            });
+
+            // Сортируем по количеству посещений (по убыванию)
+            const sortedClients = Object.values(visitsByClient).sort((a, b) => b.count - a.count);
+
+            sortedClients.forEach(item => {
+                if (!item.client) return;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.client.name}</td>
+                    <td>${formatDate(item.lastDate)}</td>
+                    <td>${getCardTypeName(item.client.cardType)}</td>
+                    <td>${item.count}</td>
+                `;
+                visitsList.appendChild(row);
+            });
+        }
+
+        // Загрузка топа клиентов по посещениям
+        function loadTopClients() {
+            const topClientsList = document.getElementById('top-clients-list');
+            topClientsList.innerHTML = '';
+
+            if (clients.length === 0) {
+                topClientsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">Нет данных о клиентах</td></tr>';
+                return;
+            }
+
+            // Создаем массив клиентов с информацией о посещениях
+            const clientsWithVisits = clients.map(client => {
+                const monthlyVisits = getMonthlyVisits(client.id);
+                const totalVisits = getTotalVisits(client.id);
+                return {
+                    ...client,
+                    monthlyVisits,
+                    totalVisits
+                };
+            });
+
+            // Сортируем по количеству посещений за месяц (по убыванию)
+            const sortedClients = clientsWithVisits.sort((a, b) => b.monthlyVisits - a.monthlyVisits);
+
+            // Берем топ-10 клиентов
+            const topClients = sortedClients.slice(0, 10);
+
+            if (topClients.length === 0) {
+                topClientsList.innerHTML = '<tr><td colspan="5" style="text-align: center;">Нет данных о посещениях</td></tr>';
+                return;
+            }
+
+            topClients.forEach(client => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${client.name}</td>
+                    <td>${client.phone}</td>
+                    <td>${getCardTypeName(client.cardType)}</td>
+                    <td>${client.monthlyVisits}</td>
+                    <td>${client.totalVisits}</td>
+                `;
+                topClientsList.appendChild(row);
+            });
+        }
+
+        // Построение графика посещений
+        function buildVisitsChart() {
+            const chartContainer = document.getElementById('visits-chart');
+            chartContainer.innerHTML = '';
+
+            // Получаем последние 7 дней
+            const days = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                days.push(date);
+            }
+
+            // Подсчитываем посещения по дням
+            const visitsByDay = days.map(day => {
+                const dayStart = new Date(day);
+                dayStart.setHours(0, 0, 0, 0);
+                
+                const dayEnd = new Date(day);
+                dayEnd.setHours(23, 59, 59, 999);
+                
+                return visits.filter(visit => {
+                    const visitDate = new Date(visit.date);
+                    return visitDate >= dayStart && visitDate <= dayEnd;
+                }).length;
+            });
+
+            // Находим максимальное количество посещений для масштабирования графика
+            const maxVisits = Math.max(...visitsByDay, 1);
+
+            // Создаем столбцы графика
+            days.forEach((day, index) => {
+                const visitCount = visitsByDay[index];
+                const height = maxVisits > 0 ? (visitCount / maxVisits) * 250 : 0;
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${height}px`;
+                
+                const value = document.createElement('div');
+                value.className = 'chart-value';
+                value.textContent = visitCount;
+                
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = formatDate(day.toISOString().split('T')[0]);
+                
+                bar.appendChild(value);
+                bar.appendChild(label);
+                chartContainer.appendChild(bar);
+            });
+        }
+
+        // Обновление выпадающего списка для добавления посещений
+        function updateVisitSelect() {
+            const visitSelect = document.getElementById('visit-client');
+            // Очищаем список, кроме первого option
+            visitSelect.innerHTML = '<option value="">Выберите клиента</option>';
+            
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = `${client.name} (${client.phone})`;
+                visitSelect.appendChild(option);
+            });
+        }
+
+        // Добавление посещения
+        function addVisit() {
+            const clientId = document.getElementById('visit-client').value;
+            if (!clientId) {
+                showNotification('Выберите клиента', 'error');
+                return;
+            }
+
+            const client = clients.find(c => c.id === clientId);
+            if (!client) {
+                showNotification('Клиент не найден', 'error');
+                return;
+            }
+
+            // Добавляем посещение
+            const visit = {
+                id: Date.now().toString(),
+                clientId: clientId,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            visits.push(visit);
+            localStorage.setItem('loyaltyVisits', JSON.stringify(visits));
+
+            // Обновляем интерфейс
+            loadClients();
+            loadVisits();
+            updateStats();
+            buildVisitsChart();
+            loadTopClients();
+
+            showNotification(`Посещение добавлено для ${client.name}`, 'success');
+        }
+
+        // Фильтрация подписок
         function filterSubscriptions(filter) {
             const subscriptionsList = document.getElementById('subscriptions-list');
             subscriptionsList.innerHTML = '';
@@ -779,6 +1163,7 @@
             // Обновление интерфейса
             loadClients();
             updateStats();
+            updateVisitSelect();
             resetForm();
             
             // Показать уведомление
@@ -816,9 +1201,19 @@
         function deleteClient(id) {
             if (confirm('Вы уверены, что хотите удалить этого клиента?')) {
                 clients = clients.filter(client => client.id !== id);
+                // Также удаляем все посещения этого клиента
+                visits = visits.filter(visit => visit.clientId !== id);
+                
                 localStorage.setItem('loyaltyClients', JSON.stringify(clients));
+                localStorage.setItem('loyaltyVisits', JSON.stringify(visits));
+                
                 loadClients();
                 updateStats();
+                updateVisitSelect();
+                loadVisits();
+                buildVisitsChart();
+                loadTopClients();
+                
                 showNotification('Клиент успешно удален', 'success');
             }
         }
@@ -856,23 +1251,26 @@
             clientsList.innerHTML = '';
 
             if (filteredClients.length === 0) {
-                clientsList.innerHTML = '<tr><td colspan="6" style="text-align: center;">Клиенты не найдены</td></tr>';
+                clientsList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Клиенты не найдены</td></tr>';
                 return;
             }
 
             filteredClients.forEach(client => {
                 const status = getSubscriptionStatus(client.endDate);
+                const monthlyVisits = getMonthlyVisits(client.id);
                 const row = document.createElement('tr');
                 
                 row.innerHTML = `
                     <td>${client.name}</td>
                     <td>${client.phone}</td>
                     <td>${getCardTypeName(client.cardType)}</td>
+                    <td>${monthlyVisits}</td>
                     <td>${formatDate(client.endDate)}</td>
                     <td><span class="status-badge status-${status}">${getStatusText(status)}</span></td>
                     <td class="actions">
                         <button class="btn-icon btn-edit" data-id="${client.id}"><i class="fas fa-edit"></i></button>
                         <button class="btn-icon btn-delete" data-id="${client.id}"><i class="fas fa-trash"></i></button>
+                        <button class="btn-icon btn-visit" data-id="${client.id}" title="Добавить посещение"><i class="fas fa-calendar-plus"></i></button>
                     </td>
                 `;
                 
@@ -891,11 +1289,19 @@
                     deleteClient(this.dataset.id);
                 });
             });
+
+            document.querySelectorAll('.btn-visit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    addQuickVisit(this.dataset.id);
+                });
+            });
         }
 
         // Обновление статистики
         function updateStats() {
             const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
             
             const totalClients = clients.length;
             const activeSubscriptions = clients.filter(client => {
@@ -903,9 +1309,11 @@
                 return endDate >= today;
             }).length;
             
-            const expiringToday = clients.filter(client => {
-                const endDate = new Date(client.endDate);
-                return endDate.toDateString() === today.toDateString();
+            // Подсчет посещений за текущий месяц
+            const monthlyVisits = visits.filter(visit => {
+                const visitDate = new Date(visit.date);
+                return visitDate.getMonth() === currentMonth && 
+                       visitDate.getFullYear() === currentYear;
             }).length;
             
             const expiredSubscriptions = clients.filter(client => {
@@ -915,16 +1323,45 @@
 
             document.getElementById('total-clients').textContent = totalClients;
             document.getElementById('active-subscriptions').textContent = activeSubscriptions;
-            document.getElementById('expiring-today').textContent = expiringToday;
+            document.getElementById('month-visits').textContent = monthlyVisits;
             document.getElementById('expired-subscriptions').textContent = expiredSubscriptions;
+            
+            // Обновляем название месяца
+            const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+                                "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+            document.getElementById('month-name').textContent = monthNames[currentMonth] + " " + currentYear;
+        }
+
+        // Получение количества посещений за месяц для клиента
+        function getMonthlyVisits(clientId) {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            return visits.filter(visit => {
+                if (visit.clientId !== clientId) return false;
+                const visitDate = new Date(visit.date);
+                return visitDate.getMonth() === currentMonth && 
+                       visitDate.getFullYear() === currentYear;
+            }).length;
+        }
+
+        // Получение общего количества посещений для клиента
+        function getTotalVisits(clientId) {
+            return visits.filter(visit => visit.clientId === clientId).length;
         }
 
         // Экспорт данных
         function exportData() {
-            const dataStr = JSON.stringify(clients, null, 2);
+            const data = {
+                clients: clients,
+                visits: visits
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
             
-            const exportFileDefaultName = 'loyalty-clients.json';
+            const exportFileDefaultName = 'loyalty-data.json';
             
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
@@ -943,16 +1380,26 @@
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    if (Array.isArray(importedData)) {
-                        // Добавляем импортированных клиентов к существующим
-                        clients = [...clients, ...importedData];
+                    
+                    if (importedData.clients && Array.isArray(importedData.clients)) {
+                        clients = importedData.clients;
                         localStorage.setItem('loyaltyClients', JSON.stringify(clients));
-                        loadClients();
-                        updateStats();
-                        showNotification('Данные успешно импортированы', 'success');
-                    } else {
-                        showNotification('Ошибка: неверный формат файла', 'error');
                     }
+                    
+                    if (importedData.visits && Array.isArray(importedData.visits)) {
+                        visits = importedData.visits;
+                        localStorage.setItem('loyaltyVisits', JSON.stringify(visits));
+                    }
+                    
+                    // Обновление интерфейса
+                    loadClients();
+                    updateStats();
+                    updateVisitSelect();
+                    loadVisits();
+                    buildVisitsChart();
+                    loadTopClients();
+                    
+                    showNotification('Данные успешно импортированы', 'success');
                 } catch (error) {
                     showNotification('Ошибка при импорте данных', 'error');
                     console.error(error);
@@ -966,7 +1413,7 @@
 
         // Подтверждение очистки данных
         function confirmClearData() {
-            if (clients.length === 0) {
+            if (clients.length === 0 && visits.length === 0) {
                 showNotification('Нет данных для очистки', 'error');
                 return;
             }
@@ -984,9 +1431,17 @@
         // Очистка данных
         function clearData() {
             clients = [];
+            visits = [];
             localStorage.removeItem('loyaltyClients');
+            localStorage.removeItem('loyaltyVisits');
+            
             loadClients();
             updateStats();
+            updateVisitSelect();
+            loadVisits();
+            buildVisitsChart();
+            loadTopClients();
+            
             closeModal();
             showNotification('Все данные были успешно удалены', 'success');
         }
